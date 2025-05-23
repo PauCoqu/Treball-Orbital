@@ -10,3 +10,15 @@ clc; clear; close all;
 [Year, DoY, Seconds, Constellation, SatID, x_TRF, y_TRF, z_TRF, v_x, v_y, v_z, clock_offset] = llegir_txt ('data.txt');
 
 [r, lambda_deg, phi_deg] = Cartesianes_geocentriques(x_TRF, y_TRF, z_TRF);
+
+%2b 2c posicio satelit en funcio del temps
+r_vs_t(Seconds, SatID, r);
+
+
+
+
+
+
+
+
+
