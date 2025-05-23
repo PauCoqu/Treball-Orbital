@@ -1,15 +1,10 @@
-filename = 'nom_del_fitxer.txt';
-data = readmatrix(filename);
+%% CODI PROJECTE ORBITAL
+%---------------------------------------------
+% Data: 23/05/2025
+% Membres: Antonio Luque, Pau Cornudella i Alex Aleñà
+% Assignatura: AERODINÀMICA, MECÀNICA DE VOL I ORBITAL
+% Grup: 6
+% ---------------------------------------------
+clc; clear; close all;
 
-
-% Obre el fitxer
-fid = fopen('data.txt');
-
-% Format: 6 primeres columnes (textuals o mixtes) + 13 columnes numèriques
-formatSpec = '%s %d %d %f %s %d %f %f %f %f %f %f %f %f %f %f %f %f %f';
-
-% Llegeix totes les columnes
-data = textscan(fid, formatSpec);
-
-% Tanca el fitxer
-fclose(fid);
+[Year, DoY, Seconds, Constellation, SatID, x_TRF, y_TRF, z_TRF, v_x, v_y, v_z, clock_offset] = llegir_txt ('data.txt');
