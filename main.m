@@ -18,17 +18,8 @@ r_vs_t(Seconds, SatID, r);
 v_vs_t(SatID, x_TRF, y_TRF, z_TRF, v_x, v_y, v_z);
 
 %2e) variació de rangs 
-sat_list = unique(SatID);
+delta_r_km = delta_r(SatID, r);
 
-for i = 1:length(sat_list)
-    sat = sat_list(i);
-    indices = SatID == sat;
-    
-    r_max = max(r(indices));
-    r_min = min(r(indices));
-    
-    delta_r = (100*(r_max - r_min)/r_min) / 1e3; % en kilómetros
-    delta_r_km(i) = delta_r;
-    
-    fprintf('  PRN %d: %.3f %\n', sat, delta_r);
-end
+
+
+
