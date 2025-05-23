@@ -22,9 +22,9 @@ function v_vs_t(SatID, x, y, z, v_x, v_y, v_z)
              'DisplayName', ['PRN ' num2str(sat_list(i))]);
     end
 
-    xlabel('Distancia geocéntrica r (km)');
-    ylabel('Velocidad orbital v (km/s)');
-    title('Velocidad vs. Posición (r) de los satélites Galileo');
+    xlabel('Distància geocèntrica r (km)');
+    ylabel('Velocitat orbital v (km/s)');
+    title('Velocitat vs. Posició (r) dels satèl·lits');
     legend show;
 end
 

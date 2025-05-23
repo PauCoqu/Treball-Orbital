@@ -30,9 +30,9 @@ function r_vs_t(Seconds, SatID, r)
     end
 
     % Etiquetas y leyenda
-    xlabel('Tiempo (horas)');
-    ylabel('Distancia geocéntrica r (km)');
-    title('Evolución de la distancia geocéntrica de los satélites');
+    xlabel('Temps (h)');
+    ylabel('Distància geocèntrica r (km)');
+    title('Evolució de la distància geocèntrica dels satél·lits');
     legend show;
 end
 
