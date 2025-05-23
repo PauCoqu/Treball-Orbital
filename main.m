@@ -14,11 +14,4 @@ clc; clear; close all;
 %2b 2c posicio satelit en funcio del temps
 r_vs_t(Seconds, SatID, r);
 
-
-
-
-
-
-
-
-
+v_vs_t(SatID, x_TRF, y_TRF, z_TRF, v_x, v_y, v_z)
