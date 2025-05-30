@@ -7,6 +7,7 @@
 % ---------------------------------------------
 clc; clear; close all;
 
+
 [Year, DoY, Seconds, Constellation, SatID, x_TRF, y_TRF, z_TRF, v_x, v_y, v_z, clock_offset] = llegir_txt ('data.txt');
 
 [r, lambda_deg, phi_deg] = Cartesianes_geocentriques(x_TRF, y_TRF, z_TRF);
@@ -42,25 +43,44 @@ ylabel('r (km)');
 title('Comparació r(t) entre 2015 y 2025 (satèl·lits comuns)');
 legend show;
 
-    % Crear figura
-    figure;
-    
-    % Cargar imagen del mapa del mundo (ajusta el nombre si es distinto)
-%     img = imread('World_map.png'); % Usa una proyección equirectangular
-%     image([-180 180], [-90 90], flipud(img)); % Ajustar ejes a grados
-%     set(gca,'YDir','normal'); % Invertir eje Y
-%     hold on;
-    
-    % Ajustar ejes
-    xlim([-180 180]);
-    ylim([-90 90]);
-    
-    % Dibujar trayectorias
-    plot(lambda_deg(SatID == 14), phi_deg(SatID == 14), 'r', 'LineWidth', 1.5, 'DisplayName', 'GSAT201');
-    plot(lambda_deg(SatID == 18), phi_deg(SatID == 18), 'b', 'LineWidth', 1.5, 'DisplayName', 'GSAT202');
-    
-    xlabel('Longitud (°)');
-    ylabel('Latitud (°)');
-    title('Ground tracks de GSAT201 y GSAT202 (TRF)');
-    legend show;
+%3. Satellite ground tracks in the Terrestrial Reference Frame (TRF)
+
+satellite_groundtrack(lambda_deg, phi_deg, SatID);
+
+%4
+
+% Paso 1: Crear vectores de latitudes y longitudes (cada 5 grados, por ejemplo)
+lambda_4 = (-90:5:90)';      % vector columna
+phi_4 = (-180:5:180)';   % vector columna
+
+% Crear todos los pares posibles de (lon, lat)
+[Lon4, Lat4] = meshgrid(lambda_4, phi_4);
+Lon4 = Lon4(:);  % vector columna
+Lat4 = Lat4(:);  % vector columna
+
+% Ahora Lon y Lat son vectores (N x 1) donde N = número total de celdas
+
+phi_rad4 = deg2rad(Lat4);       % latitud geocéntrica en radianes
+lambda_rad4 = deg2rad(Lon4);    % longitud en radianes
+
+x_obs = r(1) * cos(phi_rad4) .* cos(lambda_rad4);
+y_obs = r(1) * cos(phi_rad4) .* sin(lambda_rad4);
+z_obs = r(1) * sin(phi_rad4);
+
+figure;
+plot (phi_rad4, lambda_rad4,'.');
+
+%Pasar de xyz a ENU
+
+N = length(Lon4);  % número de observadores
+
+[ENU]=xyz_2_ENU(x_obs, y_obs, z_obs, lambda_rad4, phi_rad4, N);
+
+% [ENU_]
+% 
+% rho
+
+plot3(ENU(1,:),ENU(2,:),ENU(3,:));
+
+
 
