@@ -1,4 +1,4 @@
-function r_vs_t(Seconds, SatID, r)
+function sat_list=r_vs_t(Seconds, SatID, r)
 % GRAFICAR_DISTANCIA_GEOCENTRICA Grafica la distancia geocéntrica r frente al tiempo
 % para múltiples satélites, diferenciándolos por colores.
 %
@@ -30,9 +30,9 @@ function r_vs_t(Seconds, SatID, r)
     end
 
     % Etiquetas y leyenda
-    xlabel('Temps (h)');
-    ylabel('Distància geocèntrica r (km)');
-    title('Evolució de la distància geocèntrica dels satél·lits');
+    xlabel('Tiempo (h)');
+    ylabel('Distancia geocéntrica r (km)');
+    title('Evolución de la distancia geocéntrica de los satélites');
     legend show;
 end
 

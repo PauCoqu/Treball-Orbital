@@ -1,4 +1,4 @@
-function [r, lambda_deg, phi_deg] = Cartesianes_geocentriques(x, y, z)
+function [r, lambda_deg, phi_deg, lambda, phi] = Cartesianes_geocentriques(x, y, z)
 
     % Módulo del vector posición
     r = sqrt(x.^2 + y.^2 + z.^2);
