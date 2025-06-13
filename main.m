@@ -120,3 +120,4 @@ xlim([-177 177]); ylim([-86  86]); %axis equal; grid on
 
 %APARTAT 5
 [Year_UT, DoY_UT, Seconds_UT] = gps_to_ut(Year, DoY, Seconds);
+[x_CRF, y_CRF, z_CRF, v_x_CRF, v_y_CRF, v_z_CRF] = trf_to_crf(Year_UT, DoY_UT, Seconds_UT, x_TRF, y_TRF, z_TRF, v_x, v_y, v_z);
