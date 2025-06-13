@@ -115,8 +115,4 @@ title('Mapa de calor de la cobertura de Galileo ');
 set(gca,'YDir','normal'); grid on;
 xlim([-177 177]); ylim([-86  86]); %axis equal; grid on
 
-
-
-
-%APARTAT 5
-[Year_UT, DoY_UT, Seconds_UT] = gps_to_ut(Year, DoY, Seconds);
+[r_ECI, v_ECI, lambda_deg, phi_deg] = apartat_cinc_PAU(SatID, Seconds, DoY, Year, x_TRF, y_TRF, z_TRF, v_x, v_y, v_z);
