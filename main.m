@@ -101,7 +101,7 @@ for t = 1:N_epochs
         if n_vis>=3, vis_counts(p,3)=vis_counts(p,3)+1; end
     end
 end
-
+%adadadadsa
 vis_hours = vis_counts * (5/60);           % N_pts × 3   (h)
 [lat_grid, lon_grid] = meshgrid(linspace(-90,90,60), linspace(-180,180,120));
 score = vis_hours(:,1) + 2*vis_hours(:,2) + 3*vis_hours(:,3);
