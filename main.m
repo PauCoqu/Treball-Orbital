@@ -133,7 +133,7 @@ xlim([-177 177]); ylim([-86  86]); %axis equal; grid on
     theta_GMST_sec = mod(theta_GMST_sec, 86400);
     theta_GMST_rad = 2 * pi * theta_GMST_sec / 86400;
 
-    % c) Rotació TRF → ECI
+    % c) Rotació TRF -> ECI
     R3 = @(theta) [cos(theta) sin(theta) 0;
                   -sin(theta) cos(theta) 0;
                    0          0          1];
@@ -210,13 +210,12 @@ xlim([-177 177]); ylim([-86  86]); %axis equal; grid on
     xlim([-180 180]);
     ylim([-90 90]);
 
-%% 6. Oscilating 
 
-mu = 3.986004418e14; % [m^3/s^2] parámetro gravitacional Tierra
+%% 6. Osculating orbital elements y gráfica de órbitas en ECI
 
+mu = 3.986004418e14;  % [m^3/s^2]
 prns = unique(SatID,'stable');
 Nsat = numel(prns);
-
 a_km     = nan(Nsat,1);
 e        = nan(Nsat,1);
 i_deg    = nan(Nsat,1);
@@ -224,82 +223,88 @@ Omega_deg= nan(Nsat,1);
 omega_deg= nan(Nsat,1);
 nu_deg   = nan(Nsat,1);
 
-% Tomamos el primer estado válido de cada satélite
 for k = 1:Nsat
+    % Fórmulas página 100,101 ppw. Orbital Mechanics.
     prn = prns(k);
     idx = find(SatID==prn,1,'first');
-    
-    % Vector posición y velocidad
+    % r, v en ECI para este satélite
     r = r_ECI(:,idx);
     v = v_ECI(:,idx);
-    
-    % Módulos y productos básicos
-    R = norm(r);
-    V2= dot(v,v);
-    h = cross(r,v);
-    h_norm = norm(h);
-    
-    % 1) Semieje mayor
-    energy = V2/2 - mu/R;  
-    a = -mu/(2*energy);
-    a_km(k) = a/1e3;  % convertir a km
-    
-    % 2) Excentricidad
-    e_vec = (cross(v,h)/mu) - (r/R);
+
+    % 1) Distancia r  (Fórmula 1)
+    R   = norm(r);          % r = √(X²+Y²+Z²)
+
+    % 2) Velocidad escalar v (Fórmula 2)
+    V2  = dot(v,v);         % v² = v·v
+
+    % 5) Momento angular h  (Fórmula 5)
+    h     = cross(r,v);
+    h_norm= norm(h);
+
+    % 6) Semieje mayor a  (Fórmula 6)
+    energy = V2/2 - mu/R;   % E = v²/2 – μ/r
+    a      = -mu/(2*energy);
+    a_km(k)= a/1e3;
+
+    % 4) Vector y magnitud de excentricidad e  (Fórmula 4)
+    e_vec = cross(v,h)/mu - r/R;
     e(k)  = norm(e_vec);
-    
-    % 3) Inclinación
+
+    % 7) Inclinación i  (Fórmula 7)
     i_deg(k) = acosd( h(3)/h_norm );
-    
-    % 4) Longitud del nodo ascendente
-    Nvec = cross([0;0;1],h);
-    N = norm(Nvec);
-    Omega = acosd( Nvec(1)/N );
-    if Nvec(2)<0, Omega = 360 - Omega; end
-    Omega_deg(k) = Omega;
-    
-    % 5) Argumento del periapsis
-    omega = acosd( dot(Nvec,e_vec)/(N*e(k)) );
-    if e_vec(3)<0, omega = 360 - omega; end
-    omega_deg(k) = omega;
-    
-    % 6) Anomalía verdadera
+
+    % 8) Línea de nodos N  (Fórmula 8)
+    Nvec  = cross([0;0;1], h);
+    Nnorm = norm(Nvec);
+
+    % 9) Ascensión recta Ω  (Fórmula 9)
+    Om = acosd( Nvec(1)/Nnorm );
+    if Nvec(2) < 0, Om = 360-Om; end
+    Omega_deg(k) = Om;
+
+    % 10) Argumento del periapsis ω  (Fórmula 10)
+    om = acosd( dot(Nvec,e_vec)/(Nnorm*e(k)) );
+    if e_vec(3) < 0, om = 360-om; end
+    omega_deg(k) = om;
+
+    % 11) Anomalía verdadera ν  (Fórmula 11)
     nu = acosd( dot(e_vec,r)/(e(k)*R) );
-    if dot(r,v)<0, nu = 360 - nu; end
+    if dot(r,v) < 0, nu = 360-nu; end
     nu_deg(k) = nu;
+
 end
 
-% Presentar resultados en tabla
+% Mostrar tabla en la consola
 T = table(prns, a_km, e, i_deg, Omega_deg, omega_deg, nu_deg, ...
     'VariableNames',{'PRN','a_km','e','i_deg','Omega_deg','omega_deg','nu_deg'});
 disp(T)
-
-% Gráfica 3D de todas las órbitas en ECI
 
 figure('Color','w');
 hold on; grid on; axis equal tight
 view(40,25)
 
-% Esfera Tierra
+% --- Esfera de la Tierra en gris suave ---------------
 [xe,ye,ze] = sphere(100);
-radioTerra = 6371;  % km
-surf(radioTerra*xe, radioTerra*ye, radioTerra*ze, ...
-     'FaceColor',[0.5 0.7 1], 'EdgeColor','none', 'FaceAlpha',0.3);
-prns   = unique(SatID,'stable');
-colors = lines(numel(prns));
+radioTerra_km = 6371;
+surf(radioTerra_km*xe, radioTerra_km*ye, radioTerra_km*ze, ...
+     'FaceColor',[0.8 0.8 0.8], 'EdgeColor','none', 'FaceAlpha',0.5);
 
-for k = 1:numel(prns)
+% --- Colores distintos para cada satélite ------------
+prns = unique(SatID,'stable');
+N    = numel(prns);
+cols = lines(N);                
+
+% --- Trazar cada órbita en km ------------------------
+for k = 1:N
     idx = SatID==prns(k);
-    % convierte de m a km
     X = r_ECI(1,idx)/1e3;
     Y = r_ECI(2,idx)/1e3;
     Z = r_ECI(3,idx)/1e3;
-    plot3(X, Y, Z, '-', 'Color', colors(k,:), 'LineWidth',1);
+    plot3(X, Y, Z, 'LineWidth',1.2, 'Color', cols(k,:), ...
+          'DisplayName', ['PRN ' num2str(prns(k))]);
 end
-
 xlabel('X_{ECI} (km)')
 ylabel('Y_{ECI} (km)')
 zlabel('Z_{ECI} (km)')
 title('Órbitas de los satélites Galileo en sistema ECI')
-legendStrings = arrayfun(@(p) ['PRN ' num2str(p)], prns, 'UniformOutput',false);
-legend(legendStrings,'Location','northeastoutside')
+legend('Location','northeastoutside')
