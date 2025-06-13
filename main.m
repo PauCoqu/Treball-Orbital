@@ -114,3 +114,9 @@ xlabel('Longitud (°)'); ylabel('Latitud(°)');
 title('Mapa de calor de la cobertura de Galileo ');
 set(gca,'YDir','normal'); grid on;
 xlim([-177 177]); ylim([-86  86]); %axis equal; grid on
+
+
+
+
+%APARTAT 5
+[Year_UT, DoY_UT, Seconds_UT] = gps_to_ut(Year, DoY, Seconds);
