@@ -212,22 +212,13 @@ xlim([-177 177]); ylim([-86  86]); %axis equal; grid on
     xlim([-180 180]);
     ylim([-90 90]);
 
-%% 6. OSCULATING ORBITAL ELEMENTS =========================
-%  Partiendo de la posición y velocidad absolutas en ECI (r_ECI, v_ECI)
-%  calculadas en el apartado 5, obtenemos para cada satélite:
-%     a      = semieje mayor
-%     e      = excentricidad
-%     i      = inclinación
-%     Omega  = longitud del nodo ascendente
-%     omega  = argumento del periapsis
-%     nu     = anomalía verdadera
+%% 6. Oscilating 
 
-mu = 3.986004418e14;               % [m^3/s^2] parámetro gravitacional Tierra
+mu = 3.986004418e14; % [m^3/s^2] parámetro gravitacional Tierra
 
 prns = unique(SatID,'stable');
 Nsat = numel(prns);
 
-% Prealocar vectores de elementos
 a_km     = nan(Nsat,1);
 e        = nan(Nsat,1);
 i_deg    = nan(Nsat,1);
@@ -285,27 +276,20 @@ T = table(prns, a_km, e, i_deg, Omega_deg, omega_deg, nu_deg, ...
     'VariableNames',{'PRN','a_km','e','i_deg','Omega_deg','omega_deg','nu_deg'});
 disp(T)
 
-%% Gráfica 3D de todas las órbitas en ECI
-
-% Supone que ya tienes en el workspace:
-%   r_ECI (3×N): posiciones en ECI [m]
-%   SatID  (N×1): PRN de cada muestra
+% Gráfica 3D de todas las órbitas en ECI
 
 figure('Color','w');
 hold on; grid on; axis equal tight
 view(40,25)
 
-% 1) Dibuja la Tierra como esfera de radio 6371 km
+% Esfera Tierra
 [xe,ye,ze] = sphere(100);
 radioTerra = 6371;  % km
 surf(radioTerra*xe, radioTerra*ye, radioTerra*ze, ...
      'FaceColor',[0.5 0.7 1], 'EdgeColor','none', 'FaceAlpha',0.3);
-
-% 2) Prepara colores distintos para cada PRN
 prns   = unique(SatID,'stable');
 colors = lines(numel(prns));
 
-% 3) Traza cada órbita
 for k = 1:numel(prns)
     idx = SatID==prns(k);
     % convierte de m a km
@@ -315,7 +299,6 @@ for k = 1:numel(prns)
     plot3(X, Y, Z, '-', 'Color', colors(k,:), 'LineWidth',1);
 end
 
-% 4) Etiquetas y leyenda
 xlabel('X_{ECI} (km)')
 ylabel('Y_{ECI} (km)')
 zlabel('Z_{ECI} (km)')
