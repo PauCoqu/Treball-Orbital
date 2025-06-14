@@ -8,7 +8,7 @@
 clc; clear; close all;
 
 %% 1. Leer datos.
-[Year, DoY, Seconds, Constellation, SatID, x_TRF, y_TRF, z_TRF, v_x, v_y, v_z, clock_offset] = leer_txt ('data_2025.txt');
+[Year, DoY, Seconds, Constellation, SatID, x_TRF, y_TRF, z_TRF, v_x, v_y, v_z, clock_offset] = leer_txt ('data.txt');
 
 %Pasar de coordenadas cartesianas a geocentricas ECEF
 [r, lambda_deg, phi_deg, lambda, phi_obs] = Cartesianes_geocentriques(x_TRF, y_TRF, z_TRF);
@@ -263,7 +263,7 @@ for k = 1:Nsat
     Omega_deg(k) = Om;
 
     % 10) Argumento del periapsis omega
-    om = acosd( dot(Nvec,e_vec)/(Nnorm*e(k)) );
+    om = acosd( dot(Nvec,e_vec)/(Nnorm*e(k)));
     if e_vec(3) < 0, om = 360-om; end
     omega_deg(k) = om;
 
@@ -274,8 +274,6 @@ for k = 1:Nsat
 
 end
 
-prns_plot = [14, 18];  % PRNs a mostrar
-cols = lines(numel(prns_plot));
 
 % Mostrar tabla en la consola
 T = table(prns, a_km, e, i_deg, Omega_deg, omega_deg, nu_deg, ...
@@ -297,23 +295,25 @@ N    = numel(prns);
 cols = lines(N);                
 
 % Orbita en km
-% for k = 1:N
-%     idx = SatID==prns(k);
+ for k = 1:N
+     idx = SatID==prns(k);
+     X = r_ECI(1,idx)/1e3;
+     Y = r_ECI(2,idx)/1e3;
+    Z = r_ECI(3,idx)/1e3;
+     plot3(X, Y, Z, 'LineWidth',1.2, 'Color', cols(k,:), ...
+           'DisplayName', ['PRN ' num2str(prns(k))]);
+end
+
+% prns_plot = [14, 18];  % PRNs a mostrar
+% cols = lines(numel(prns_plot));
+% for k = 1:numel(prns_plot)  %14 i 18 només (apartado 6b)
+%     idx = SatID == prns_plot(k);
 %     X = r_ECI(1,idx)/1e3;
 %     Y = r_ECI(2,idx)/1e3;
 %     Z = r_ECI(3,idx)/1e3;
 %     plot3(X, Y, Z, 'LineWidth',1.2, 'Color', cols(k,:), ...
-%           'DisplayName', ['PRN ' num2str(prns(k))]);
+%           'DisplayName', ['PRN ' num2str(prns_plot(k))]);
 %end
-
-for k = 1:numel(prns_plot)  %Gràfica del 14 i 18 només
-    idx = SatID == prns_plot(k);
-    X = r_ECI(1,idx)/1e3;
-    Y = r_ECI(2,idx)/1e3;
-    Z = r_ECI(3,idx)/1e3;
-    plot3(X, Y, Z, 'LineWidth',1.2, 'Color', cols(k,:), ...
-          'DisplayName', ['PRN ' num2str(prns_plot(k))]);
-end
 
 xlabel('X_{ECI} (km)')
 ylabel('Y_{ECI} (km)')
