@@ -1,9 +1,9 @@
-%% CODI PROJECTE ORBITAL
+%% CODI PROYECTO ORBITAL
 %---------------------------------------------
-% Data: 23/05/2025
-% Membres: Antonio Luque, Pau Cornudella i Alex Aleñà
-% Assignatura: AERODINÀMICA, MECÀNICA DE VOL I ORBITAL
-% Grup: 6
+% Fecha: 23/05/2025
+% Miembros: Antonio Luque, Pau Cornudella i Alex Aleñà
+% Asignatura: AERODINÁMICA, MECÁNICA DE VUELO Y ORBITAL
+% Grupo: 6
 % ---------------------------------------------
 clc; clear; close all;
 
